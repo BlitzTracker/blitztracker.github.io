@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <meta charset="utf-8">
+        <title class="username">Blitz Tracker</title>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+        <style>
+            .loader {
+                border: 16px solid #f3f3f3;
+                border-radius: 50%;
+                border-top: 16px solid #3498db;
+                width: 120px;
+                height: 120px;
+                -webkit-animation: spin 2s linear infinite;
+                /* Safari */
+                animation: spin 2s linear infinite;
+            }
+          
+            /* Safari */
+            @-webkit-keyframes spin {
+                0% { -webkit-transform: rotate(0deg); }
+                100% { -webkit-transform: rotate(360deg); }
+            }
+          
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+        </style>
+
+    </head>
+    <body class="w3-black" onoffline="offline();" ononline="online();">
+
+        <!--Internet connection lost-->
+        <div id="offline-warning" class="w3-panel w3-display-container" style="background-color:rgb(172, 0, 0); display: none;">
+            <span onclick="this.parentElement.style.display='none'" class="w3-button w3-large w3-display-topright w3-hover-opacity">×</span>
+            <h3>Warning</h3>
+            <p>Browser is offline. This page requires a internet connection to function.</p>
+        </div>
+
+        <!--Heading-->
+        <div class="w3-container animate-top w3-teal w3-bar w3-padding-large">
+            <div class="w3-col" style="width:310px;">
+                <h1 style="display:inline;">Blitz Tracker</h1>
+                <img class="w3-margin-left" src="res/images/diamond.png" style="width:50px" alt="diamond league">
+            </div>
+            <div class="w3-rest">
+                <div class="w3-dropdown-hover w3-teal" style="width:100%;">
+                    <form id="playerSearchForm">
+                        <input id="playerSearch" type="text" placeholder="Search players..." class="w3-input w3-margin-top" oninput="searchPlayers(this.value);" onfocusin="showSearchBar();" onfocusout="hideSearchBar();">
+                    </form>
+                    <div class="w3-dropdown-content w3-bar-block w3-card-4" style="max-height:200px; overflow: auto;" id="searchResults">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Nav-->
+        <div class="w3-bar animate-top w3-dark-grey">
+            <a class="w3-bar-item w3-button w3-mobile nav-items">Profile</a>
+            <!--<a class="w3-bar-item w3-button w3-mobile nav-items">Rating</a>-->
+            <a class="w3-bar-item w3-button w3-mobile nav-items">Tanks</a>
+            <a class="w3-bar-item w3-button w3-mobile nav-items">Stats</a>
+            <a class="w3-bar-item w3-right w3-button w3-mobile login" onclick = "logIn();" style="display: none;">Log in</a>
+            <a class="w3-bar-item w3-right w3-button w3-mobile logout" onclick = "logOut();" style="display: none;">Log out</a>
+        </div>
+
+        <!--Profile-->
+        <div class="pages w3-container w3-padding-64 animate-left" style="background-image: url('res/images/profile_back.jpeg');">
+            <div class="w3-container w3-padding-64 w3-center" style="background-color: #00000064;">
+
+                <!--Name-->
+                <div class="w3-container w3-margin content">
+                    <h1 class="w3-text-white" style="display: inline-block;">
+                        <span class="username" style="text-shadow: 5px 5px 2px #000000"></span>
+                        <a href="https://www.blitzstars.com/clan/com/114132" target = "_blank" class="clanTag"></a>
+                    </h1>
+                </div>
+
+                <!--Loader-->
+                <div class="w3-container w3-row">
+                    <div class="loader" style="display:inline-block;"></div>
+                </div>
+
+                <!--Stats-->
+                <div class="w3-content content">
+
+                    <!--Win rate-->
+                    <div class="w3-container w3-row">
+                        <div class="w3-container w3-margin" id="win-rate"></div>
+                    </div>
+
+                    <!--Damage, WN8, Survival-->
+                    <div class="w3-container w3-row">
+                        <div class="w3-col w3-display-container" id="damage" style="height:137px; width:30%;"></div>
+                        <div class="w3-col w3-display-container" id="wn8" style="height:137px; width:40%;"></div>
+                        <div class="w3-col w3-display-container" id="survival" style="height:137px; width:30%;"></div>
+                    </div>
+
+                    <!--Battles-->
+                    <div class="w3-container w3-row">
+                        <div class="w3-container w3-margin" id="battles"></div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!--Tanks-->
+        <div class = "pages w3-container w3-padding-64 w3-center animate-left">
+            <div class = "w3-container w3-padding-64 w3-margin" style="overflow: auto; background-color: rgb(29, 29, 29);">
+
+                <!--Loader-->
+                <div class="w3-container w3-row">
+                    <div class="loader" style="display:inline-block;"></div>
+                </div>
+
+                <!--Tanks-->
+                <div class="content">
+                    <h1 class="w3-text-white" style="display: inline-block;">
+                        <span class="username" style="text-shadow: 5px 5px 2px #000000">Search for a player</span>
+                        <a href="https://www.blitzstars.com/clan/com/114132" target = "_blank" class="clanTag"></a>
+                    </h1>
+                    <h1 style="text-shadow: 5px 5px 2px #000000">Tanks</h1>
+                    <div class="w3-content w3-center" style="max-height: 700px; overflow: auto; overscroll-behavior: contain; border: 2px solid white;">
+                        <table style="border-collapse: collapse; cursor:pointer;">
+                            <thead id="tankStatsHead">
+                            
+                            </thead>
+                            <tbody id="tankStats">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!--Stats-->
+        <div class = "pages w3-container w3-padding-64 w3-center animate-left">
+            <div class = "w3-container w3-padding-64 w3-margin" style="overflow: auto; background-color: rgb(29, 29, 29);">
+                
+                <!--Loader-->
+                <div class="w3-container w3-row">
+                    <div class="loader" style="display:inline-block;"></div>
+                </div>
+
+                <!--Stats-->
+                <div class="content">
+                    <h1 class="w3-text-white" style="display: inline-block;">
+                    <span class="username" style="text-shadow: 5px 5px 2px #000000">Search for a player</span>
+                    <a href="https://www.blitzstars.com/clan/com/114132" target = "_blank" class="clanTag"></a>
+                    </h1>
+                    <div class="w3-content w3-center w3-border" style="max-height: 700px; overflow: auto; overscroll-behavior: contain;">
+                    <h1 style="text-shadow: 5px 5px 2px #000000">Tanks</h1>
+                    <table style="border-collapse: collapse; cursor:pointer;">
+                        <thead id="tankStatsHead">
+                        
+                        </thead>
+                        <tbody id="tankStats">
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+                <img src="" style="display:none;" id="monthStats">
+
+            </div>
+
+        </div>
+
+        <!--FAQ-->
+        <div class = "pages w3-container w3-padding-64 w3-center animate-right">
+            <div class = "w3-container w3-padding-large w3-margin" style="background-color: rgb(29, 29, 29)">
+                <h1 style="text-shadow: 5px 5px 2px #000000">FAQ</h1>
+                <button onclick="accordion('answer1')" class="w3-btn w3-block w3-white w3-left-align w3-opacity-min w3-hover-opacity">Why should I play World of Tanks Blitz?</button>
+                <div id="answer1" class="w3-container w3-hide w3-leftbar w3-rightbar">
+                    <video poster="res/images/pshe-min.jpg" preload="none" class="w3-third w3-margin-bottom w3-margin-top" controls>
+                        <source src="res/videos/1_pshe_1920x1080.mp4" type="video/mp4" size="1080">
+                    </video>
+                    <div style="margin-top:100px">
+                        You will have the time of your life! Just think about all those tanks that you'll ram and the ammo racks you'll explode!
+                    </div>
+                </div>
+                <button onclick="accordion('answer2')" class="w3-btn w3-block w3-white w3-left-align w3-opacity-min w3-hover-opacity">What is your strategy, how do you win so much?</button>
+                <div id="answer2" class="w3-container w3-hide w3-leftbar w3-rightbar w3-padding-large">
+                    <video poster="res/images/azhypa-min.jpg" preload="none" class="w3-third w3-margin-bottom w3-margin-top" controls>
+                        <source src="res/videos/2_azhypa_1920x1080.mp4" type="video/mp4" size="1080">
+                    </video>
+                    <div style="margin-top:100px">
+                        Play it safe and know when to fall back, but also know when it's a good time to rush! After playing a few thousand battles you'll get the hang of it :D
+                    </div>
+                </div>
+                <button onclick="accordion('answer3')" class="w3-btn w3-block w3-white w3-left-align w3-opacity-min w3-hover-opacity">What are some of your best battle moments?</button>
+                <div id="answer3" class="w3-container w3-hide w3-leftbar w3-rightbar w3-padding-large">
+                    <video poster="res/images/fun-min.jpg" preload="none" class="w3-third w3-margin-bottom w3-margin-top" controls>
+                        <source src="res/videos/4_wg_fun_1920x1080.mp4" type="video/mp4" size="1080">
+                    </video>
+                    <div style="margin-top:100px">
+                        I have had some pretty good battles, but here are some of my best! Disclaimer: These actually aren't my battles XD
+                    </div>
+                </div>
+                <button onclick="accordion('answer4')" class="w3-btn w3-block w3-white w3-left-align w3-opacity-min w3-hover-opacity">Do all of these things have cool videos inside?</button>
+                <div id="answer4" class="w3-container w3-hide w3-leftbar w3-rightbar w3-padding-large">
+                    <video poster="res/images/kuber-min.jpg" preload="none" class="w3-third w3-margin-bottom w3-margin-top" controls>
+                        <source src="res/videos/3_kuber_1920x1080.mp4" type="video/mp4" size="1080">
+                    </video>
+                    <div style="margin-top:100px">
+                        Pretty much haha. Even this one does and it has absolutly nothing to do with the question! Really, the only reason I have them in here is because they are the only content I could find, and I'm too lazy to compile my own video.
+                    </div>
+                </div>
+                <button onclick="accordion('answer5')" class="w3-btn w3-block w3-white w3-left-align w3-opacity-min w3-hover-opacity">Which tank should I go for?</button>
+                <div id="answer5" class="w3-container w3-hide w3-leftbar w3-rightbar w3-padding-large">
+                    <video poster="res/images/last-min.jpg" preload="none" class="w3-third w3-margin-bottom w3-margin-top" controls>
+                        <source src="res/videos/5_wg_last_1920x1080.mp4" type="video/mp4" size="1080">
+                    </video>
+                    <div style="margin-top:100px">
+                        All of them! You can't go wrong! (just don't get the foch... or the bz... or the CS-63, FV4005, HoRi... Okay mabye I should have put some info in here after all!) Just watch this video to see what I mean.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Footer-->
+        <footer class="w3-container w3-padding-64 w3-center w3-teal">
+            <div class="w3-quarter w3-border-right w3-border-left" style="height: 200px;">
+                <h4>Pages</h4>
+                <a class="w3-hover-text-yellow" href = "#" onclick="changePage(0);" style="text-decoration: none;" target = "_self">Profile</a><br>
+                <a class="w3-hover-text-yellow" href = "#" onclick="changePage(1);" style="text-decoration: none;" target = "_self">Rating</a><br>
+                <a class="w3-hover-text-yellow" href = "#" onclick="changePage(2);" style="text-decoration: none;" target = "_self">Tanks</a><br>
+                <a class="w3-hover-text-yellow" href = "#" onclick="changePage(3);" style="text-decoration: none;" target = "_self">Stats</a><br>
+                <a class="w3-hover-text-yellow" href = "#" onclick="changePage(4);" style="text-decoration: none;" target = "_self">FAQ</a><br>
+            </div>
+            <div class="w3-quarter w3-border-right w3-border-left" style="height: 200px;">
+                <h4>Useful Sites</h4>
+                <a class="w3-hover-text-yellow" href="https://www.blitzstars.com" style="text-decoration: none;" target = "_blank">Blitz Stars</a><br>
+                <a class="w3-hover-text-yellow" href="https://guidesblitz.com" style="text-decoration: none;" target = "_blank">Guides Blitz</a><br>
+                <a class="w3-hover-text-yellow" href="https://blitzkit.app" style="text-decoration: none;" target = "_blank">Blitz kit</a><br>
+                <a class="w3-hover-text-yellow" href="https://replays.wotinspector.com/en/" style="text-decoration: none;" target = "_blank">Wot inspector</a><br>
+                <a class="w3-hover-text-yellow" href="https://na.wargaming.net/en/games/wotb" style="text-decoration: none;" target = "_blank">Wargaming</a><br>
+            </div>
+            <div class="w3-half w3-border-right w3-border-left" style="height: 200px;">
+                <h4>Contact us</h4>
+                <div class="w3-margin">Email: example@gmail.com</div>
+                <div class="w3-margin">Phone: (555) 555 5555</div>
+                <div class="w3-margin">Tanks Blitz: IronJudgement</div>
+            </div>
+            <div class="w3-container">
+                <div class="w3-rest w3-display-container" style="height:50px; margin-bottom: 0px;">
+                    <h3 class="w3-display-left" style="display: inline;">Blitz Tracker</h3>
+                    <img class="w3-display-right" src="res/images/diamond.png" style="height:50px" alt="diamond league">
+                </div>
+            </div>
+        </footer>
+
+        <!--General popup-->
+        <div style="position: fixed; top:0px; bottom:0px; left:0px; right:0px; display: none;" id="popup">
+            <div class="w3-black w3-opacity-min" style="position: absolute; width: 100%; height:100%;"></div>
+            <div class="w3-black w3-container w3-center w3-display-container" style="position: absolute; top:50%; left:50%; transform: translateY(-50%) translateX(-50%); width: 100%; max-width: 1000px; overflow: auto;">
+                <span onclick="this.parentElement.parentElement.style.display='none'" class="w3-button w3-large w3-display-topright w3-hover-opacity">×</span>
+                <div class = "w3-container w3-padding-large w3-margin" style="background-color: rgb(29, 29, 29)">
+                    
+                </div>
+            </div>
+        </div>
+
+        <!--Makes things more ez-->
+        <script src="https://www.w3schools.com/lib/w3.js"></script>
+
+        <!--Account Stats-->
+        <script src="script/stats.js"></script>
+
+        <!--Page Changing-->
+        <script src="script/pages.js"></script>
+
+        <!--other scripts-->
+        <script src="script/search.js"></script>
+
+    </body>
+</html>
